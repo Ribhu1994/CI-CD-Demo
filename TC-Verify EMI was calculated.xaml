@@ -66,7 +66,6 @@
       <AssemblyReference>System.Memory</AssemblyReference>
       <AssemblyReference>UiPath.UIAutomationCore</AssemblyReference>
       <AssemblyReference>UiPath.OCR.Activities.Design</AssemblyReference>
-      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
       <AssemblyReference>UiPath.Testing.Activities</AssemblyReference>
       <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
       <AssemblyReference>UiPath.OCR.Activities</AssemblyReference>
@@ -152,15 +151,9 @@
       </sap:WorkflowViewStateService.ViewState>
       <ui:InvokeWorkflowFile ArgumentsVariable="{x:Null}" ContinueOnError="{x:Null}" DisplayName="Invoke Main workflow" sap:VirtualizedContainerService.HintSize="333.6,113.6" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" LogEntry="No" LogExit="No" UnSafe="False" WorkflowFileName="Main.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <InArgument x:TypeArguments="x:Int32" x:Key="vAmount">
-            <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="vAmount" />
-          </InArgument>
-          <InArgument x:TypeArguments="x:Int32" x:Key="vTenure">
-            <mva:VisualBasicValue x:TypeArguments="x:Int32" ExpressionText="vTenure" />
-          </InArgument>
-          <InOutArgument x:TypeArguments="x:Boolean" x:Key="vTaskException">
-            <mva:VisualBasicReference x:TypeArguments="x:Boolean" ExpressionText="vTaskException" />
-          </InOutArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="vAmount">[vAmount]</InArgument>
+          <InArgument x:TypeArguments="x:Int32" x:Key="vTenure">[vTenure]</InArgument>
+          <InOutArgument x:TypeArguments="x:Boolean" x:Key="vTaskException">[vTaskException]</InOutArgument>
         </ui:InvokeWorkflowFile.Arguments>
       </ui:InvokeWorkflowFile>
     </Sequence>

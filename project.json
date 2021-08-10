@@ -1,6 +1,6 @@
 {
   "name": "UiPath CICD Demo",
-  "description": "CICD Demo Process with Gitlab",
+  "description": "CICD Demo Process with GitHub",
   "main": "Main.xaml",
   "dependencies": {
     "UiPath.Excel.Activities": "[2.11.0-preview]",
@@ -13,7 +13,7 @@
   "entitiesStores": [],
   "schemaVersion": "4.0",
   "studioVersion": "20.10.2.0",
-  "projectVersion": "1.0.3",
+  "projectVersion": "1.0.0",
   "runtimeOptions": {
     "autoDispose": false,
     "isPausable": true,
@@ -40,7 +40,7 @@
     "fileInfoCollection": [
       {
         "editingStatus": "Publishable",
-        "testCaseId": "6975df42-6964-413f-bc1c-3b8be67ceb84",
+        "testCaseId": "dc452c83-0d76-4293-852e-0c8663b7ec61",
         "fileName": "TC-Verify EMI was calculated.xaml"
       }
     ],

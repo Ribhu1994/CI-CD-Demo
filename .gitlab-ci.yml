@@ -1,0 +1,77 @@
+variables:
+
+#Orchestrator Services
+  UIPATH_ORCH_URL : "https://cloud.uipath.com/"
+  UIPATH_ORCH_LOGICAL_NAME : "sayangcmtomv"
+  UIPATH_ORCH_TENANT_NAME : "mSayan"
+  UIPATH_ORCH_FOLDER_NAME : "Modern Folder"
+
+.shared_windows_runners:
+  tags:
+  - shared-windows
+  - windows
+  - windows-1809
+
+stages:
+  - pack
+  - test
+  - deploy
+
+#### PACK PHASE - PACKAGING THE PROJECT####
+Packing Project:
+  stage : pack
+  extends:
+  - .shared_windows_runners
+ 
+  before_script:
+    - Invoke-WebRequest "https://gitlab.com/m.sayan/uipath-cicd-demo/tree/main/scripts/UiPathPack.ps1" -OutFile "$env:CI_PROJECT_DIR\UiPathPack.ps1";
+  
+  script:
+    - | 
+      Write-Host $env:CI_PROJECT_DIR 
+      New-Item -Path "$env:CI_PROJECT_DIR\\" -ItemType "directory" -Name "output_packages"; 
+      . "$env:CI_PROJECT_DIR\UiPathPack.ps1" "$env:CI_PROJECT_DIR\project.json" "$env:CI_PROJECT_DIR\output_packages\" -autoVersion
+  
+  artifacts: 
+    paths : ["$env:CI_PROJECT_DIR\\output_packages\\"] 
+    expire_in : 30 days 
+
+
+#### TESTING PHASE ####
+Sanity Testing:
+  stage: test
+  extends:
+    - .shared_windows_runners
+  
+  before_script:
+    - Invoke-WebRequest "https://gitlab.com/m.sayan/uipath-cicd-demo/tree/main/scripts/UiPathRunTest.ps1" -OutFile "$env:CI_PROJECT_DIR\UiPathRunTest.ps1";
+  
+  script:
+    - echo "Sanity testing started"
+    - . "$env:CI_PROJECT_DIR\UiPathRunTest.ps1" "$UIPATH_ORCH_URL" $UIPATH_ORCH_TENANT_NAME -userKey $env:APIUserKey -account_name $UIPATH_ORCH_LOGICAL_NAME -project_path "$env:CI_PROJECT_DIR\project.json" -result_path "$env:CI_PROJECT_DIR\junit_package_test_result.xml" -out junit  -folder_organization_unit $UIPATH_ORCH_FOLDER_NAME
+    - echo "Sanity testing completed"
+  
+  artifacts:
+    paths: [ "$env:CI_PROJECT_DIR\\output_results\\" ]
+    reports:
+      junit: junit_package_test_result.xml
+
+UAT Testing:
+  stage: test
+  script:
+    - echo "Testing started in UAT"
+    - echo "Testing completed in UAT"
+
+
+#### BUILD PHASE ####
+Deploy to Orchestrator:
+  stage: deploy
+  extends:
+    - .shared_windows_runners
+
+  before_script: 
+    - Invoke-WebRequest "https://gitlab.com/m.sayan/uipath-cicd-demo/tree/main/scripts/UiPathDeploy.ps1" -OutFile "$env:CI_PROJECT_DIR\UiPathDeploy.ps1"; 
+  
+  script:
+    - . "$env:CI_PROJECT_DIR\UiPathDeploy.ps1" "$env:CI_PROJECT_DIR\\output_packages\\" "$UIPATH_ORCH_URL" "$UIPATH_ORCH_TENANT_NAME" -account_name $UIPATH_ORCH_LOGICAL_NAME -userKey $env:APIUserKey -folder_organization_unit $UIPATH_ORCH_FOLDER_NAME
+    - echo "Package Built and Deployed in DEV"
